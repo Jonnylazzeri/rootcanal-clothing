@@ -6,4 +6,13 @@ When we statrt the react app: these are the things we can remove:
 
   3. We don't need any of the app CSS (don't delete the file, just the contents)
 
-  
+
+Lock Files are used since our project most likely will not be running from our computer. We'll most likely upload the project ot a server after we are done with it.
+Our lock file will make sure that all of our packages have their relevant dependencies in order to work.
+
+In order to pass in dynamic js properties into the style attribute of a jsx element, we would have to use template strings:
+
+   const MenuItem = ({title, imageUrl}) => (
+    <div style={{
+      backgroundImage: `url(${imageUrl})`
+    }}className= 'menu-item'>
