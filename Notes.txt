@@ -1,3 +1,5 @@
+Section 5:
+
 When we statrt the react app: these are the things we can remove:
 
   1. The serviceWorker method from index.js
@@ -16,3 +18,102 @@ In order to pass in dynamic js properties into the style attribute of a jsx elem
     <div style={{
       backgroundImage: `url(${imageUrl})`
     }}className= 'menu-item'>
+
+React is just a UI library, which is why we have to route ouselves.
+The browser provides something called a history API, and internally, libraries like ract router, use this API to hijack and mimic URLs.
+
+To enable the app componenet to route, we would have to next it inside <BrowserRouter> inside the index.js file
+
+    ReactDOM.render(
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>,
+    document.getElementById('root')
+  );
+
+
+In order to use Routing within the app (in a precise way), we would have to import Route from react-router-dom:
+
+  import { Route } from 'react-router-dom'
+
+And then we would have to give the route three props:
+  path: where we specify the "url" we want to route to.
+  componenet: which is the componenet that's supposed to be in the url. For instance, HomePage is going to be inside our root, since it is the main page of the application.
+  exact: a boolean, which specifies if the path has to be the exact path that is specified, or if it could just be a path that contains that path (for instance /hats contains a '/', so it will be outputted along with our hats page if we don't specify the exact prop).
+
+    function App() {
+    return (
+      <div>
+        <Route exact path='/' component={HomePage}/>
+        <Route exact path='/hats' component={HatsPage}/>
+      </div>
+    );
+  }
+
+If Switch finds a path that is a match to any of the Routes nested inside it, it will not render anything else but that route.
+Unless of course, exact is specified, and then it will just redirect to that route.
+
+
+The params property inside the Route componenet is an object of URL Parameters.
+url parameters or route paramters will look like: :topicId. This will make our url dynamic, and whatever comes after the path: '/topics/:topicId' will be logged as a parameter. 
+
+For instance if we write: '/topics/13' ... 13 will now be entered as the value for the topicId parameter.
+
+The Link component is a special component that the react-router-dom gives us, that lets us dynamically pass in an attribute of "to", which will specify where to take us to. For example:
+
+  <Link to='/topics'>TOPICS</Link>
+
+This will give you a link that will direct you to the page you want to reach, instead of manually inserting the url you want to reach everytime.
+
+React is a single page application, so it is not redirecting us and rebuilding the entire application everytime the url changes.
+
+If instead of a link we wanted to use a button, we would have to use the history prop:
+
+  <button onClick= {() => props.history.push('/topics)}> Topics </button>
+
+This gives us more freedom to control when we want this to work. For instance, we can use this on a componentDidMount, but we couldn't use a <Link>
+
+The location prop tells us where we are currently. This prop inside the location is called the pathname.
+
+The main usage of match is building a dynamic url:
+
+const TopicList = props => {
+  return (
+    <div>
+      <h1> Topic List Page </h1>
+      <Link to{`${props.match.url}/13`}>To Topic 13</Link>
+      <Link to{`${props.match.url}/17`}>To Topic 17</Link>
+      <Link to{`${props.match.url}/21`}>To Topic 21</Link>
+    </div>
+  )
+}
+
+By wrapping components inside the withRouter function, we can get access to everything the router gets access to (location, history, etc.), which otherwise, would be impossible, unless it was the first parent component (homepage) of the application.
+
+This: 
+
+  render() {
+      return (
+        <div className= 'directory-menu'>
+          {
+            this.state.sections.map(({title, imageUrl, id, size}) => (
+              <MenuItem key={id} title = {title} imageUrl={imageUrl} size = {size} />
+            ))  
+          }
+        </div>
+      )
+    }
+
+is equivalent to: 
+
+  render() {
+      return (
+        <div className= 'directory-menu'>
+          {
+            this.state.sections.map(({id, ...otherSectionProps}) => (
+              <MenuItem key={id} {...otherSectionProps} />
+            ))  
+          }
+        </div>
+      )
+    }
