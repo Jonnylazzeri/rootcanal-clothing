@@ -1,0 +1,9 @@
+When we statrt the react app: these are the things we can remove:
+
+  1. The serviceWorker method from index.js
+  
+  2. We don't need anything from the App componenet except for the div element (just the div, nothing thats already nested inside it.)
+
+  3. We don't need any of the app CSS (don't delete the file, just the contents)
+
+  
