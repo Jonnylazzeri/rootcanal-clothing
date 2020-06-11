@@ -119,4 +119,112 @@ is equivalent to:
     }
 
 
-Firebase:
+Redux: 
+
+in order to install redux in react, we will have to enter the node.js code:
+
+yarn add redux redux-logger react-redux
+
+Aftwerwards, we insert our redux into the index.js file like this:
+import { Provider } from 'react-redux';
+
+The provider is a component that is a component that is the parent of everything inside of our application. As the parent, it allows us to get access to all of the things related to the store, that we're going to put all of the actual code we want to store on our redux state.
+
+We wrap the provider around the entire index.js: 
+
+ReactDOM.render(
+  <Provider>
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>
+  </Provider>,
+  document.getElementById('root')
+);
+
+After writing the provider down, we would have to write the store itself, by making a new folder in src called redux (where all the code related to our redux is going to be).
+
+The first file we will create is the root reducer, which will be the code that will bind all of our states together.
+
+We will later add the user folder and user-reducer.js file. A reducer is a function that gets two properties. It gets a state object, which represents the last state or the initial state, and then it receives an action.
+
+The action just has a type and payload value:
+
+{
+  type: 
+  payload:
+}
+
+The reducer is a function
+
+The initial state: 
+
+const INITIAL_STATE =  {
+  currentUser: null
+}
+
+The updated state:
+
+const [state, dispatch] = (state, action) => {
+
+}
+
+We could also do the updated ES6 version of this, since you can enter a default value in the state, if it ever comes back as undefined:
+
+const [state, dispatch] = (state = INITIAL_STATE, action) => {
+
+}
+
+null is considered a value, yet undefined is not.
+
+
+const [state, dispatch] = (state = INITIAL_STATE, action) => {
+  switch (action.type) {
+    case 'SET_CURRENT_USER':
+      return {
+        ...state,
+        currentUser: action.payload
+      }
+
+    default:
+      return state;
+  }
+}
+
+Depending on what the action is, the switch statement will check if the case for the action.type is equal to SET_CURRENT_USER, we want to return the new object in the return (out of the reducer function).
+If it's not, we just want to return the default state.
+
+Later we add : 
+
+import { combineReducers } from 'redux'
+
+to the root reducer.
+
+
+
+import userReducer from './user/user-reducer'
+
+export default combineReducers ({
+  user: userReducer
+})
+
+The next file we need to create is the store.js
+
+import { createStore, applyMiddleWare } from 'redux';
+
+The middleware catches the action that was instantiated and moves it along.
+
+
+const middleWares = [logger];
+
+const store = createStore(rootReducer, applyMiddleWare(...middleWares))
+
+After exporting store, we're going to need to import it to index.js.
+
+import store from './redux/store';
+
+ReactDOM.render(
+  <Provider store={store}>
+
+With our code written with all the previous steps, we now have access to redux in our application.
+
+We have to make sure we always align the action creator's type with the reducer's type expectation in order to create the appropriate effects on the reducer.
